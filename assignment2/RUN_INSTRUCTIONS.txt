@@ -1,0 +1,217 @@
+========================================
+HOW TO RUN THE BANKING SYSTEM
+Step-by-Step Guide
+========================================
+
+PREREQUISITES:
+1. Python 3.8 or higher installed
+2. Pyro5 library installed (see Step 0 below)
+
+========================================
+STEP 0: INSTALL PYRO5 (One-time setup)
+========================================
+
+Open PowerShell or Command Prompt and run:
+    pip install Pyro5
+
+Verify installation:
+    python -c "import Pyro5; print('Pyro5 installed successfully')"
+
+========================================
+STEP 1: OPEN 4 TERMINAL WINDOWS
+========================================
+
+You need 4 separate terminal windows:
+- Terminal 1: Pyro5 Nameserver
+- Terminal 2: BDB Server
+- Terminal 3: BAS Server
+- Terminal 4: BC Client
+
+========================================
+STEP 2: NAVIGATE TO PROJECT FOLDER
+========================================
+
+In ALL 4 terminals, navigate to the assignment2 folder:
+
+    cd "D:\ACBT\Year_03\Distributed Systems\Assignment 02\Banking System\assignment2"
+
+========================================
+STEP 3: START COMPONENTS IN ORDER
+========================================
+
+IMPORTANT: Start them in this exact order!
+
+--- TERMINAL 1: Start Pyro5 Nameserver ---
+Command:
+    python -m Pyro5.nameserver
+
+Expected output:
+    - Nameserver started
+    - Shows URI and port
+    - LEAVE THIS RUNNING
+
+--- TERMINAL 2: Start BDB Server ---
+Command:
+    python bdb_server.py
+
+Expected output:
+    - "Database tables created/verified"
+    - "Mock users initialized: alice ($10,000) and bob ($5,000)"
+    - "Banking Database Server started and registered as 'banking.database'"
+    - "Server is ready to accept connections"
+    - LEAVE THIS RUNNING
+
+--- TERMINAL 3: Start BAS Server ---
+Command:
+    python bas_server.py
+
+Expected output:
+    - "Connected to Banking Database Server (Tier 3)"
+    - "Banking Application Server started and registered as 'banking.application'"
+    - "Server is ready to accept connections"
+    - LEAVE THIS RUNNING
+
+--- TERMINAL 4: Run BC Client ---
+Command:
+    python bc_client.py
+
+Expected output:
+    - "Connected to Banking Application Server (Tier 2)"
+    - Main menu appears
+    - YOU CAN NOW USE THE SYSTEM
+
+========================================
+STEP 4: USE THE SYSTEM
+========================================
+
+In Terminal 4 (BC Client), you'll see a menu:
+
+1. Login
+2. Exit
+
+After logging in, menu changes to:
+1. View Balance
+2. Transfer Money
+3. Check Transfer Status
+4. Export Database to CSV
+5. Logout
+6. Exit
+
+TEST CREDENTIALS:
+- Username: alice
+- Password: pass123
+- Balance: $10,000.00
+
+OR
+
+- Username: bob
+- Password: pass456
+- Balance: $5,000.00
+
+========================================
+QUICK START EXAMPLE
+========================================
+
+1. Login as alice:
+   - Select option 1
+   - Username: alice
+   - Password: pass123
+
+2. Check balance:
+   - Select option 1
+   - Should show: $10,000.00
+
+3. Transfer money:
+   - Select option 2
+   - Recipient: bob
+   - Amount: 1500
+   - Message: (optional)
+   - Should succeed with fee $0.00 (free tier)
+
+4. Check transfer status:
+   - Select option 3
+   - Enter the Transfer ID from previous transfer
+
+========================================
+STOPPING THE SYSTEM
+========================================
+
+To stop (order doesn't matter, but recommended):
+
+1. In Terminal 4 (BC Client):
+   - Select option 6 (Exit)
+   OR
+   - Press Ctrl+C
+
+2. In Terminal 3 (BAS Server):
+   - Press Ctrl+C
+
+3. In Terminal 2 (BDB Server):
+   - Press Ctrl+C
+   - This triggers automatic CSV export
+
+4. In Terminal 1 (Nameserver):
+   - Press Ctrl+C
+
+========================================
+TROUBLESHOOTING
+========================================
+
+Problem: "ModuleNotFoundError: No module named 'Pyro5'"
+Solution: Run "pip install Pyro5"
+
+Problem: "Cannot locate nameserver"
+Solution: Start Terminal 1 (nameserver) FIRST, wait a few seconds
+
+Problem: "Cannot connect to BDB Server"
+Solution: Start Terminal 2 (BDB Server) BEFORE Terminal 3 (BAS Server)
+
+Problem: "Connection refused"
+Solution: Check all 3 servers are running (Terminals 1, 2, 3)
+
+Problem: "Database locked"
+Solution: Make sure only ONE BDB Server is running
+
+Problem: Port already in use
+Solution: Close any other Pyro5 servers that might be running
+
+========================================
+RUNNING THE TEST SUITE
+========================================
+
+After starting all servers (Terminals 1, 2, 3), open a 5th terminal:
+
+    cd "D:\ACBT\Year_03\Distributed Systems\Assignment 02\Banking System\assignment2"
+    python test_system.py
+
+This will run all 10 automated tests.
+
+========================================
+FILE LOCATIONS
+========================================
+
+After running the system:
+- Database: assignment2/database/bank.db
+- CSV exports: assignment2/exports/
+  - users.csv
+  - accounts.csv
+  - transfers.csv
+
+========================================
+VISUAL SUMMARY
+========================================
+
+Terminal 1: python -m Pyro5.nameserver
+            ↓
+Terminal 2: python bdb_server.py ────┐
+            ↓                        │
+Terminal 3: python bas_server.py ────┼──→ Three-tier system
+            ↓                        │
+Terminal 4: python bc_client.py ─────┘
+
+All terminals must be running simultaneously!
+
+========================================
+END OF RUN INSTRUCTIONS
+========================================
+
